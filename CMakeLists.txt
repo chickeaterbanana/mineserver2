@@ -71,6 +71,7 @@ SET(mineserver_source
   src/mineserver/network/server.cpp
   src/mineserver/network/client.cpp
   src/mineserver/world/generator/flatlands.cpp
+  src/mineserver/game/object/blocktype.cpp
   # These need to be put into a separate .so file or something...
   src/mineserver/network/protocol/notch/protocol.cpp
   src/mineserver/network/protocol/notch/packetstream.cpp

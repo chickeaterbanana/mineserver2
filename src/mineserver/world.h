@@ -30,6 +30,8 @@
 
 #include <utility>
 #include <string>
+#include <map>
+#include <vector>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
