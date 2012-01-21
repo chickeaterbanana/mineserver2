@@ -41,44 +41,36 @@ namespace Mineserver
 	
 	typedef uint8_t blocktype_t;
 	
-	class Game_Object_BlockType_Base;
-  
-  template <blocktype_t blockType>
-  class Game_Object_BlockType : public Game_Object_BlockType_Base
-  {
-  	private:		 		
-  		Game_Object_BlockType();
-  		
-  	public:
-  		virtual ~Game_Object_BlockType() {};
-  		
-  		static boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType()
-  		{
-	  			if (m_curType)
-	  				return m_curType;
-	  			else
-	  				return boost::shared_ptr< Game_Object_BlockType<blockType> >(new Game_Object_BlockType<blockType>());
-  		}
-  };
+
 	
   class Game_Object_BlockType_Base : public boost::enable_shared_from_this<Mineserver::Game_Object_BlockType_Base>
-  {
+  {  	
   	protected:
-  		blocktype_t m_curTypeIdentifier;
-  		static boost::shared_ptr<Mineserver::Game_Object_BlockType_Base> m_curType;  		 		
-  		Game_Object_BlockType_Base() {};
+  		blocktype_t m_curTypeIdentifier;	
   		
-  	public:
+  	public: 		
+  		Game_Object_BlockType_Base() {};
   		virtual ~Game_Object_BlockType_Base() {};
   		
   		//some useful thinks
   		virtual bool isBreakable();
-  		
-  		static boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType(const blocktype_t Type)
+  };
+  
+  template <blocktype_t blockType>
+  class Game_Object_BlockType : public Game_Object_BlockType_Base
+  {
+  	public:
+  		Game_Object_BlockType();
+  		virtual ~Game_Object_BlockType() {};
+  };
+  
+  static boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType(const blocktype_t Type)
   		{
+  			
+	  		static boost::shared_ptr<Mineserver::Game_Object_BlockType_Base> m_curType;
   			switch (Type) {
   				case 0x07:
-  					return Game_Object_BlockType<0x07>::GetBlockType();
+  					return boost::shared_ptr< Game_Object_BlockType_Base >((Game_Object_BlockType_Base*)(new Game_Object_BlockType<0x07>)); //Bedrock
   				default:
 		  			if (m_curType)
 		  				return m_curType;
@@ -86,7 +78,6 @@ namespace Mineserver
 		  				return boost::shared_ptr< Game_Object_BlockType_Base >(new Game_Object_BlockType_Base());
 	  		}
   		}
-  };
 }
 
 #endif
