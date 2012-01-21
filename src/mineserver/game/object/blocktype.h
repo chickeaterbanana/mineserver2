@@ -41,7 +41,25 @@ namespace Mineserver
 	
 	typedef uint8_t blocktype_t;
 	
-	template <blocktype_t blockType> class Game_Object_BlockType;
+	class Game_Object_BlockType_Base;
+  
+  template <blocktype_t blockType>
+  class Game_Object_BlockType : public Game_Object_BlockType_Base
+  {
+  	private:		 		
+  		Game_Object_BlockType();
+  		
+  	public:
+  		virtual ~Game_Object_BlockType() {};
+  		
+  		static boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType()
+  		{
+	  			if (m_curType)
+	  				return m_curType;
+	  			else
+	  				return boost::shared_ptr< Game_Object_BlockType<blockType> >(new Game_Object_BlockType<blockType>());
+  		}
+  };
 	
   class Game_Object_BlockType_Base : public boost::enable_shared_from_this<Mineserver::Game_Object_BlockType_Base>
   {
@@ -54,9 +72,6 @@ namespace Mineserver
   		virtual ~Game_Object_BlockType_Base() {};
   		
   		//some useful thinks
-  		virtual bool isPlayerOnBlock(const Game_Player &Player, const WorldBlockPosition BlockPosition) = 0; //< TODO: implement it
-  		virtual bool isPlayerOnBlock(const Game_Player &Player, const WorldBlockPosition &BlockPosition) = 0; //< TODO: implement it
-  		virtual bool isBlockStackable() = 0; //< TODO: implement it
   		virtual bool isBreakable();
   		
   		static boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType(const blocktype_t Type)
@@ -70,24 +85,6 @@ namespace Mineserver
 		  			else
 		  				return boost::shared_ptr< Game_Object_BlockType_Base >(new Game_Object_BlockType_Base());
 	  		}
-  		}
-  };
-  
-  template <blocktype_t blockType>
-  class Game_Object_BlockType : public Game_Object_BlockType_Base
-  {
-  	private:		 		
-  		Game_Object_BlockType();
-  		
-  	public:
-  		virtual ~Game_Object_BlockType() {};
-  		
-  		static boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType()
-  		{
-	  			if (this->m_curType)
-	  				return this->m_curType;
-	  			else
-	  				return boost::shared_ptr< Game_Object_BlockType<blockType> >(new Game_Object_BlockType<blockType>());
   		}
   };
 }
