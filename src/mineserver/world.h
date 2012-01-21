@@ -29,6 +29,7 @@
 #define MINESERVER_WORLD_H
 
 #include <utility>
+#include <string>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -119,6 +120,7 @@ namespace Mineserver
     Difficulty m_difficulty;
     uint8_t m_worldHeight;
     Mineserver::WorldPosition m_spawnPosition;
+    std::string m_levelType;
 
   public:
     World()
@@ -131,6 +133,7 @@ namespace Mineserver
       m_difficulty = defaultDifficulty;
       m_worldHeight = defaultWorldHeight;
       m_spawnPosition = Mineserver::WorldPosition(0,62,0);
+      m_levelType = "DEFAULT";
     }
 
     bool hasChunk(uint32_t x, uint32_t z)
@@ -173,6 +176,9 @@ namespace Mineserver
 
     long getWorldSeed() { return m_worldSeed; }
     void setWorldSeed(long worldSeed) { m_worldSeed = worldSeed; }
+    
+    std::string getLevelType() { return m_levelType; }
+    void setLevelType(std::string levelType) { m_levelType = levelType; }
 
     bool getGameMode() { return m_gameMode; }
     void setGameMode(GameMode gameMode) { m_gameMode = gameMode; }

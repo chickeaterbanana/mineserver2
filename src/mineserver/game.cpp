@@ -206,7 +206,7 @@ void Mineserver::Game::messageWatcherLogin(Mineserver::Game::pointer_t game, Min
   loginMessage->mid = 0x01;
   loginMessage->version = 22;
   loginMessage->seed = world->getWorldSeed();
-  loginMessage->levelType = "DEFAULT";
+  loginMessage->levelType = world->getLevelType();
   loginMessage->mode = world->getGameMode();
   loginMessage->dimension = world->getDimension();
   loginMessage->difficulty = world->getDifficulty();

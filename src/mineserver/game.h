@@ -203,7 +203,7 @@ namespace Mineserver
     {
 			return (m_worlds.find(n) == m_worlds.end());
     }
-
+    
     Mineserver::World::pointer_t getWorld(int n)
     {
       return m_worlds[n];
