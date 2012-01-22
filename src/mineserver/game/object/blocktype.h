@@ -35,6 +35,7 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include <mineserver/game/player.h>
+#include <mineserver/game.h>
 #include <mineserver/game/object/block.h>
 
 namespace Mineserver
@@ -51,16 +52,29 @@ namespace Mineserver
 			protected:
 				blocktype_t m_curTypeIdentifier;	
 				
-			public:				
+			public:
+				//slots:
+				virtual bool blockBreakPostWatcher() = 0;
+				virtual bool blockBreakPreWatcher()
+				{
+					return this->isBreakable();
+				}
+			
 				virtual bool isPlayerOnBlock(const Game_Player &Player, const Game_Object_Block &Position) = 0;
 				virtual bool isPlayerOnBlock(const Game_Player &Player, const Game_Object_Block Position) = 0;
 				virtual bool isBreakable() = 0;
 		};
 		
 		//if no special Blocktype exists this type is used
-		class Game_Object_BlockType_Default : Game_Object_BlockType_Base
+		class Game_Object_BlockType_Default : public Game_Object_BlockType_Base
 		{			
-			public:
+			public:			
+				//slots:
+				virtual bool blockBreakPostWatcher()
+				{
+					return true;
+				}
+			
 				virtual bool isPlayerOnBlock(const Game_Player &Player, const Game_Object_Block &Position)
 				{
 					return false;
@@ -72,8 +86,17 @@ namespace Mineserver
 				}
 				virtual bool isBreakable();
 		};
-  
-		boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType(const blocktype_t Type);
+  	
+  	class Game_Object_BlockType_SignalHandler : public boost::enable_shared_from_this<Game_Object_BlockType_SignalHandler>
+		{
+			public:
+				typedef boost::shared_ptr<Mineserver::BlockType::Game_Object_BlockType_SignalHandler> pointer_t;
+				
+				bool blockBreakPostWatcher(Mineserver::Game::pointer_t game, Mineserver::Game_Player::pointer_t player, Mineserver::World::pointer_t world, Mineserver::WorldBlockPosition wPosition, Mineserver::World_Chunk::pointer_t chunk, Mineserver::World_ChunkPosition cPosition);
+				bool blockBreakPreWatcher(Mineserver::Game::pointer_t game, Mineserver::Game_Player::pointer_t player, Mineserver::World::pointer_t world, Mineserver::WorldBlockPosition wPosition, Mineserver::World_Chunk::pointer_t chunk, Mineserver::World_ChunkPosition cPosition);
+		};
+  	
+		boost::shared_ptr<Game_Object_BlockType_Base> getBlockType(const blocktype_t Type);
 	}
 }
 

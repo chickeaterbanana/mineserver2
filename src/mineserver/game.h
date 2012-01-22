@@ -47,6 +47,24 @@
 
 namespace Mineserver
 {
+	
+	//if One of the Slots return false the result ist false
+	struct CheckOneFalse {
+		
+		typedef bool result_type;
+		
+		template<typename InputIterator>
+		result_type operator()(InputIterator first, InputIterator last) const
+		{
+		  while (first != last) {
+		    if (!(*first))
+		      return false;
+		    ++first;
+		  }
+		  return true;
+		}
+	};
+	
   class Game : public boost::enable_shared_from_this<Mineserver::Game>
   {
   public:
@@ -61,7 +79,7 @@ namespace Mineserver
     typedef std::map<Mineserver::Game_Player::pointer_t,entityIdSet_t > playerSetMap_t; // this name sucks! 
     typedef boost::signals2::signal<void (Mineserver::Game::pointer_t, Mineserver::Network_Client::pointer_t, Mineserver::Network_Message::pointer_t message)> messageWatcher_t;
     typedef boost::signals2::signal<bool (Mineserver::Game::pointer_t, Mineserver::Game_Player::pointer_t, Mineserver::Game_PlayerPosition position)> movementWatcher_t;
-    typedef boost::signals2::signal<bool (Mineserver::Game::pointer_t, Mineserver::Game_Player::pointer_t, Mineserver::World::pointer_t, Mineserver::WorldBlockPosition wPosition, Mineserver::World_Chunk::pointer_t, Mineserver::World_ChunkPosition cPosition)> blockBreakWatcher_t;
+    typedef boost::signals2::signal<bool (Mineserver::Game::pointer_t, Mineserver::Game_Player::pointer_t, Mineserver::World::pointer_t, Mineserver::WorldBlockPosition wPosition, Mineserver::World_Chunk::pointer_t, Mineserver::World_ChunkPosition cPosition), CheckOneFalse> blockBreakWatcher_t;
     typedef boost::signals2::signal<bool (Mineserver::Game::pointer_t, Mineserver::Game_Player::pointer_t, Mineserver::World::pointer_t, Mineserver::WorldBlockPosition wPosition, Mineserver::World_Chunk::pointer_t, Mineserver::World_ChunkPosition cPosition, uint8_t type, uint8_t meta)> blockPlaceWatcher_t;
 
     static const uint32_t timeOutTicks = 1200;

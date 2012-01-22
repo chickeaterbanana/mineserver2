@@ -40,6 +40,7 @@
 #include <mineserver/world/generator/flatlands.h>
 #include <mineserver/network/protocol/notch/protocol.h>
 #include <mineserver/network/server.h>
+#include <mineserver/game/object/blocktype.h>
 
 int main()
 {
@@ -48,7 +49,9 @@ int main()
   boost::asio::io_service service;
 
   Mineserver::Game::pointer_t game = boost::make_shared<Mineserver::Game>();
-
+	
+  Mineserver::BlockType::Game_Object_BlockType_SignalHandler::pointer_t blockType_SignalHandler = boost::make_shared<Mineserver::BlockType::Game_Object_BlockType_SignalHandler>();
+	
   game->setWorld(0, boost::make_shared<Mineserver::World>());
   game->getWorld(0)->addGenerator(boost::make_shared<Mineserver::World_Generator_Flatlands>());
 
@@ -64,7 +67,9 @@ int main()
   game->addMessageWatcher(0x35, boost::bind(&Mineserver::Game::messageWatcherBlockChange, game, _1, _2, _3));
   game->addMessageWatcher(0xFE, boost::bind(&Mineserver::Game::messageWatcherServerListPing, game, _1, _2, _3));
   game->addMovementPostWatcher(boost::bind(&Mineserver::Game::movementPostWatcher, game, _1, _2, _3));
+  game->addBlockBreakPreWatcher(boost::bind(&Mineserver::BlockType::Game_Object_BlockType_SignalHandler::blockBreakPreWatcher, blockType_SignalHandler, _1, _2, _3, _4, _5, _6));
   game->addBlockBreakPostWatcher(boost::bind(&Mineserver::Game::blockBreakPostWatcher, game, _1, _2, _3, _4, _5, _6));
+  game->addBlockBreakPostWatcher(boost::bind(&Mineserver::BlockType::Game_Object_BlockType_SignalHandler::blockBreakPostWatcher, blockType_SignalHandler, _1, _2, _3, _4, _5, _6));
   game->addBlockPlacePostWatcher(boost::bind(&Mineserver::Game::blockPlacePostWatcher, game, _1, _2, _3, _4, _5, _6, _7, _8));
 
   Mineserver::Network_Protocol::pointer_t protocol = boost::make_shared<Mineserver::Network_Protocol_Notch_Protocol>();

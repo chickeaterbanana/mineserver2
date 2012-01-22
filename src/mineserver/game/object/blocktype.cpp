@@ -25,14 +25,18 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include<mineserver/game/object/blocktype.h>
+#include <iostream>
+
+#include <mineserver/game/object/blocktype.h>
+#include <mineserver/game.h>
+#include <mineserver/world.h>
 
 bool Mineserver::BlockType::Game_Object_BlockType_Default::isBreakable()
 {
 	return true;
 }
 
-boost::shared_ptr<Mineserver::BlockType::Game_Object_BlockType_Base> Mineserver::BlockType::GetBlockType(const Mineserver::BlockType::blocktype_t Type)
+boost::shared_ptr<Mineserver::BlockType::Game_Object_BlockType_Base> Mineserver::BlockType::getBlockType(const Mineserver::BlockType::blocktype_t Type)
 {
 	static std::map<Mineserver::BlockType::blocktype_t, boost::shared_ptr<Mineserver::BlockType::Game_Object_BlockType_Base> > m_curTypes;
 	if (m_curTypes.count(Type) > 0)
@@ -44,9 +48,20 @@ boost::shared_ptr<Mineserver::BlockType::Game_Object_BlockType_Base> Mineserver:
 	switch (Type) {
 		case 0x07:
 			m_curTypes[Type] = boost::shared_ptr< Mineserver::BlockType::Game_Object_BlockType_Base >(new Mineserver::BlockType::Game_Object_BlockType<0x07>()); //Bedrock
+			break;
 		default:
 			m_curTypes[Type] = boost::shared_ptr< Mineserver::BlockType::Game_Object_BlockType_Base >(new Mineserver::BlockType::Game_Object_BlockType_Default());
+			break;
 	}
 
 	return m_curTypes[Type];
+}
+
+bool Mineserver::BlockType::Game_Object_BlockType_SignalHandler::blockBreakPostWatcher(Mineserver::Game::pointer_t game, Mineserver::Game_Player::pointer_t player, Mineserver::World::pointer_t world, Mineserver::WorldBlockPosition wPosition, Mineserver::World_Chunk::pointer_t chunk, Mineserver::World_ChunkPosition cPosition)
+{    
+	return Mineserver::BlockType::getBlockType(chunk->getBlockType(cPosition.x, cPosition.y, cPosition.z))->blockBreakPostWatcher();
+}
+bool Mineserver::BlockType::Game_Object_BlockType_SignalHandler::blockBreakPreWatcher(Mineserver::Game::pointer_t game, Mineserver::Game_Player::pointer_t player, Mineserver::World::pointer_t world, Mineserver::WorldBlockPosition wPosition, Mineserver::World_Chunk::pointer_t chunk, Mineserver::World_ChunkPosition cPosition)
+{
+	return Mineserver::BlockType::getBlockType(chunk->getBlockType(cPosition.x, cPosition.y, cPosition.z))->blockBreakPreWatcher();
 }

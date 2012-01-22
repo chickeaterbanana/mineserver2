@@ -25,9 +25,11 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <iostream>
+
 #include<mineserver/game/object/Blocks/bedrock.h>
 
-template<> bool Mineserver::BlockType::Game_Object_BlockType<0x07> ::isBreakable()
+bool Mineserver::BlockType::Game_Object_BlockType<0x07>::isBreakable()
 {
-	return true;
+	return false;
 }

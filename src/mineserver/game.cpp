@@ -58,6 +58,7 @@
 #include <mineserver/network/message/kick.h>
 #include <mineserver/game.h>
 #include <mineserver/game/object/slot.h>
+#include <mineserver/game/object/blocktype.h>
 
 bool is_dead(Mineserver::Network_Client::pointer_t client) {
   return client->alive() == false;
@@ -367,13 +368,13 @@ void Mineserver::Game::messageWatcherDigging(Mineserver::Game::pointer_t game, M
     Mineserver::WorldBlockPosition wPosition = Mineserver::WorldBlockPosition(msg->x, msg->y, msg->z);
     
     uint8_t type = chunk->getBlockType(cPosition.x, cPosition.y, cPosition.z);
-
-    if (type != 0x07) // if type is not bedrock
-    {
-      chunk->setBlockType(cPosition.x, cPosition.y, cPosition.z, 0);
+		
+		if (m_blockBreakPreWatcher(shared_from_this(), getPlayerForClient(client), world, wPosition, chunk, cPosition))
+		{
+			chunk->setBlockType(cPosition.x, cPosition.y, cPosition.z, 0);
       chunk->setBlockMeta(cPosition.x, cPosition.y, cPosition.z, 0);
 
-      blockBreakPostWatcher(shared_from_this(), getPlayerForClient(client), world, wPosition, chunk, cPosition);
+      m_blockBreakPostWatcher(shared_from_this(), getPlayerForClient(client), world, wPosition, chunk, cPosition);
     }
 
   }
