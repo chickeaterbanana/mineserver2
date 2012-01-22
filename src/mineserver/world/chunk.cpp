@@ -25,36 +25,12 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MINESERVER_CONFIGURATION_H
-#define MINESERVER_CONFIGURATION_H
+#include <mineserver/world/chunk.h>
 
-#include <string>
-
-#include <boost/program_options.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/program_options/value_semantic.hpp>
-
-#include <mineserver/game.h>
-
-namespace Mineserver {
-	class Configuration : public boost::enable_shared_from_this<Mineserver::Configuration>
-	{
-		public:
-			typedef boost::shared_ptr<Configuration> pointer_t;
-		protected:
-			boost::program_options::options_description m_configFile;
-			boost::program_options::options_description m_configCommandline;
-			boost::program_options::options_description m_worldConfig;
-			boost::program_options::variables_map m_options;
-			Mineserver::Game::worldConfigList_t m_worldoptions;
-		public:
-			Configuration(int argc, char **argv);
-			void parseConfig();
-			bool hasHelp();
-			void displayHelp();
-			void configureGame(Mineserver::Game::pointer_t game);
-	};
-	
+Mineserver::World_Chunk::World_Chunk(const uint8_t WorldHeight)
+{
+	m_blockType = new uint8_t[16*16*WorldHeight];
+  m_blockMeta = new uint8_t[16*16*WorldHeight];
+  m_lightSky = new uint8_t[16*16*WorldHeight];
+  m_lightBlock = new uint8_t[16*16*WorldHeight];
 }
-
-#endif

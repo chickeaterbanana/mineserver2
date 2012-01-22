@@ -56,7 +56,7 @@ IF(MSVC_IDE)
   SET(CMAKE_CXX_FLAGS_RELEASE "/MT /D_SECURE_SCL=0")
 ENDIF(MSVC_IDE)
 
-FIND_PACKAGE(Boost COMPONENTS system filesystem signals thread REQUIRED)
+FIND_PACKAGE(Boost COMPONENTS system filesystem signals thread program_options REQUIRED)
 FIND_PACKAGE(ZLIB)
 FIND_PACKAGE(Iconv)
 FIND_PACKAGE(Threads)
@@ -66,10 +66,12 @@ SET(mineserver_source
   src/app.cpp
   src/mineserver/nbt.cpp
   src/mineserver/game.cpp
+  src/mineserver/configuration.cpp
   src/mineserver/game/player.cpp
   src/mineserver/localization.cpp
   src/mineserver/network/server.cpp
   src/mineserver/network/client.cpp
+  src/mineserver/world/chunk.cpp
   src/mineserver/world/generator/flatlands.cpp
   # These need to be put into a separate .so file or something...
   src/mineserver/network/protocol/notch/protocol.cpp
@@ -160,6 +162,7 @@ TARGET_LINK_LIBRARIES(mineserver
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SIGNALS_LIBRARY}
   ${Boost_THREAD_LIBRARY}
+  ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${ZLIB_LIBRARIES}
   ${ICONV_LIBRARIES}
   ${NOISE_LIBRARIES}

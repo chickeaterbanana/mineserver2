@@ -38,6 +38,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/signals2.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/program_options.hpp>
 
 #include <mineserver/game/player.h>
 #include <mineserver/world.h>
@@ -55,6 +56,7 @@ namespace Mineserver
     typedef std::map<std::string,Mineserver::Game_Player::pointer_t> playerList_t;
     typedef std::map<Mineserver::Network_Client::pointer_t,Mineserver::Game_Player::pointer_t> clientMap_t;
     typedef std::map<int,Mineserver::World::pointer_t> worldList_t; 
+    typedef std::map<int,boost::program_options::variables_map> worldConfigList_t; 
     typedef std::set<Mineserver::Game_Player::pointer_t> playerSet_t;
     typedef std::set<uint32_t> entityIdSet_t;
     typedef std::map<Mineserver::Game_Player::pointer_t,clientList_t> playerMap_t;

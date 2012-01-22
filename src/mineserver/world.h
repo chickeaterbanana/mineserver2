@@ -108,7 +108,7 @@ namespace Mineserver
     static const GameMode defaultGameMode = survival;
     static const Dimension defaultDimension = overWorld;
     static const Difficulty defaultDifficulty = easy;
-    static const uint8_t defaultWorldHeight = 127;
+    static const uint8_t defaultWorldHeight = 128;
 
   private:
     chunkList_t m_chunks;
@@ -154,7 +154,7 @@ namespace Mineserver
     Mineserver::World_Chunk::pointer_t generateChunk(uint32_t x, uint32_t z)
     {
       if (!hasChunk(x, z)) {
-        Mineserver::World_Chunk::pointer_t chunk = boost::make_shared<Mineserver::World_Chunk>();
+        Mineserver::World_Chunk::pointer_t chunk = boost::make_shared<Mineserver::World_Chunk>(this->getWorldHeight());
 
         chunk->x = x;
         chunk->z = z;
@@ -180,12 +180,15 @@ namespace Mineserver
     std::string getLevelType() { return m_levelType; }
     void setLevelType(std::string levelType) { m_levelType = levelType; }
 
+    static GameMode getGameModeByString(std::string gameMode) {}
     bool getGameMode() { return m_gameMode; }
     void setGameMode(GameMode gameMode) { m_gameMode = gameMode; }
 
+		static Dimension getDimensionByString(std::string dimension) {}
     int getDimension() { return m_dimension; }
     void setDimension(Dimension dimension) { m_dimension = dimension; }
 
+		static Difficulty getDifficultyByString(std::string difficulty) {}
     int getDifficulty() { return m_difficulty; }
     void setDifficulty(Difficulty difficulty) { m_difficulty = difficulty; }
 

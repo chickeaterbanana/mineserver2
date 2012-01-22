@@ -64,13 +64,14 @@ namespace Mineserver
 
     uint32_t x;
     uint32_t z;
-
+		
+		World_Chunk(const uint8_t WorldHeight = 128);
     // TODO:
     // This should use the worldHeight property instead of using 128 verbatim.
-    uint8_t m_blockType[16*16*128];
-    uint8_t m_blockMeta[16*16*128];
-    uint8_t m_lightSky[16*16*128];
-    uint8_t m_lightBlock[16*16*128];
+    uint8_t *m_blockType;
+    uint8_t *m_blockMeta;
+    uint8_t *m_lightSky;
+    uint8_t *m_lightBlock;
 
     uint8_t getBlockType(uint8_t x, uint8_t y, uint8_t z) { return m_blockType[CHUNK_INDEX(x,y,z)]; }
     void setBlockType(uint8_t x, uint8_t y, uint8_t z, uint8_t blockType) { m_blockType[CHUNK_INDEX(x,y,z)] = blockType; }

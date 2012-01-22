@@ -40,17 +40,24 @@
 #include <mineserver/world/generator/flatlands.h>
 #include <mineserver/network/protocol/notch/protocol.h>
 #include <mineserver/network/server.h>
+#include <mineserver/configuration.h>
 
-int main()
+int main(int argc, char **argv)
 {
   std::cout << "Mineserver 2.0" << std::endl;
 
   boost::asio::io_service service;
 
   Mineserver::Game::pointer_t game = boost::make_shared<Mineserver::Game>();
-
-  game->setWorld(0, boost::make_shared<Mineserver::World>());
-  game->getWorld(0)->addGenerator(boost::make_shared<Mineserver::World_Generator_Flatlands>());
+	
+	Mineserver::Configuration::pointer_t configuration = boost::make_shared<Mineserver::Configuration>(argc, argv);
+	configuration->parseConfig();
+	if (configuration->hasHelp())
+	{
+		configuration->displayHelp();
+		return 0;
+	}
+	configuration->configureGame(game);
 
   game->addMessageWatcher(0x00, boost::bind(&Mineserver::Game::messageWatcherKeepAlive, game, _1, _2, _3));
   game->addMessageWatcher(0x01, boost::bind(&Mineserver::Game::messageWatcherLogin, game, _1, _2, _3));
