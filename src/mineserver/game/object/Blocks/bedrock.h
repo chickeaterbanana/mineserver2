@@ -25,9 +25,31 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include<mineserver/game/object/blocktype.h>
+#ifndef MINESERVER_GAME_OBJECT_BLOCKTYPE_BEDROCK_H
+#define MINESERVER_GAME_OBJECT_BLOCKTYPE_BEDROCK_H
 
-bool Mineserver::BlockType::Game_Object_BlockType_Default::isBreakable()
+#include <inttypes.h>
+
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
+#include<mineserver/world.h>
+#include<mineserver/game/player.h>
+#include<mineserver/game/object/blocktype.h>
+#include<mineserver/game/object/Blocks/unspecial.h>
+
+namespace Mineserver
 {
-	return true;
+	namespace BlockType
+	{
+		//the special Blocktype Bedrock
+		template <>		
+		class Game_Object_BlockType<0x07> : public Game_Object_BlockType_Default
+		{
+			public:
+				bool isBreakable();
+		};
+	}
 }
+
+#endif

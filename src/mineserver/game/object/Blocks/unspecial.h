@@ -25,9 +25,29 @@
   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#ifndef MINESERVER_GAME_OBJECT_BLOCKTYPE_UNSPECIAL_H
+#define MINESERVER_GAME_OBJECT_BLOCKTYPE_UNSPECIAL_H
+
+#include <inttypes.h>
+
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
+#include<mineserver/world.h>
+#include<mineserver/game/player.h>
 #include<mineserver/game/object/blocktype.h>
 
-bool Mineserver::BlockType::Game_Object_BlockType_Default::isBreakable()
+namespace Mineserver
 {
-	return true;
+	namespace BlockType
+	{
+		
+		//the unspecial default Blocktype
+		template <Mineserver::BlockType::blocktype_t blockType>		
+		class Game_Object_BlockType : public Game_Object_BlockType_Default
+		{
+		};
+	}
 }
+
+#endif

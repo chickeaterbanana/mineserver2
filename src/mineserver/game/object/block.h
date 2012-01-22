@@ -28,6 +28,8 @@
 #ifndef MINESERVER_GAME_OBJECT_BLOCK_H
 #define MINESERVER_GAME_OBJECT_BLOCK_H
 
+#include <inttypes.h>
+
 #include <mineserver/byteorder.h>
 #include <mineserver/world.h>
 #include <mineserver/world/chunk.h>
@@ -37,12 +39,12 @@ namespace Mineserver
   struct Game_Object_Block
   {
     private:
-      Mineserver::World m_world;
+      Mineserver::World::pointer_t m_world;
       Mineserver::WorldBlockPosition m_pos;
 
     public:
-      Game_Object_Block(Mineserver::World world, Mineserver::WorldBlockPosition pos) : m_world(world),m_pos(pos) {}
-      Game_Object_Block(Mineserver::World world, int32_t x, int16_t y, int32_t z) : m_world(world),m_pos(Mineserver::WorldBlockPosition(x, y, z)) {}
+      Game_Object_Block(Mineserver::World::pointer_t world, Mineserver::WorldBlockPosition pos) : m_world(world),m_pos(pos) {}
+      Game_Object_Block(Mineserver::World::pointer_t world, int32_t x, int16_t y, int32_t z) : m_world(world),m_pos(Mineserver::WorldBlockPosition(x, y, z)) {}
 
       uint8_t getBlockType() { return getChunk()->getBlockType(m_pos.x & 15, m_pos.y, m_pos.z & 15); }
       uint8_t getBlockMeta() { return getChunk()->getBlockMeta(m_pos.x & 15, m_pos.y, m_pos.z & 15); }
@@ -55,12 +57,12 @@ namespace Mineserver
       void setBlockLight(uint8_t blockLight) { getChunk()->setLightBlock(m_pos.x & 15, m_pos.y, m_pos.z & 15, blockLight); }
 
     private:
-      Mineserver::World_Chunk getChunk()
+      Mineserver::World_Chunk::pointer_t getChunk()
       {
         int32_t chunk_x = ((m_pos.x) >> 4);
         int32_t chunk_z = ((m_pos.z) >> 4);
 
-        if (!m_world->hasChunk(chunk_x, chunk_z)) { return NULL; }
+        if (!m_world->hasChunk(chunk_x, chunk_z)) { return Mineserver::World_Chunk::pointer_t((Mineserver::World_Chunk*)NULL); }
 
         return m_world->getChunk(chunk_x, chunk_z);
       }

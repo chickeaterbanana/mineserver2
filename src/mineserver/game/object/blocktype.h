@@ -29,55 +29,71 @@
 #define MINESERVER_GAME_OBJECT_BLOCKTYPE_H
 
 #include <inttypes.h>
+#include <map>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-#include<mineserver/world.h>
-#include<mineserver/game/player.h>
+#include <mineserver/game/player.h>
+#include <mineserver/game/object/block.h>
+
+#include <mineserver/game/object/Blocks/unspecial.h>
+#include <mineserver/game/object/Blocks/bedrock.h>
 
 namespace Mineserver
 {
-	
-	typedef uint8_t blocktype_t;
-	
 
+	namespace BlockType
+	{
+		typedef uint8_t blocktype_t;
+		
+		//the base of all BlockTypes is pure virtual a Blocktype have to have this functions
+		class Game_Object_BlockType_Base : public boost::enable_shared_from_this<Game_Object_BlockType_Base>
+		{  	
+			protected:
+				blocktype_t m_curTypeIdentifier;	
+				
+			public:				
+				virtual bool isPlayerOnBlock(const Game_Player &Player, const Game_Object_Block &Position) = 0;
+				virtual bool isPlayerOnBlock(const Game_Player &Player, const Game_Object_Block Position) = 0;
+				virtual bool isBreakable() = 0;
+		};
+		
+		//if no special Blocktype exists this type is used
+		class Game_Object_BlockType_Default : Game_Object_BlockType_Base
+		{			
+			public:
+				virtual bool isPlayerOnBlock(const Game_Player &Player, const Game_Object_Block &Position)
+				{
+					return false;
+				}
+				
+				virtual bool isPlayerOnBlock(const Game_Player &Player, const Game_Object_Block Position)
+				{
+					return false;
+				}
+				virtual bool isBreakable();
+		};
+  
+		boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType(const blocktype_t Type)
+		{
+			static std::map<blocktype_t, boost::shared_ptr<Game_Object_BlockType_Base> > m_curTypes;
+			if (m_curTypes.count(Type) > 0)
+			{
+				if (m_curTypes[Type])
+					return m_curTypes[Type];
+			}
 	
-  class Game_Object_BlockType_Base : public boost::enable_shared_from_this<Mineserver::Game_Object_BlockType_Base>
-  {  	
-  	protected:
-  		blocktype_t m_curTypeIdentifier;	
-  		
-  	public: 		
-  		Game_Object_BlockType_Base() {};
-  		virtual ~Game_Object_BlockType_Base() {};
-  		
-  		//some useful thinks
-  		virtual bool isBreakable();
-  };
-  
-  template <blocktype_t blockType>
-  class Game_Object_BlockType : public Game_Object_BlockType_Base
-  {
-  	public:
-  		Game_Object_BlockType();
-  		virtual ~Game_Object_BlockType() {};
-  };
-  
-  static boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType(const blocktype_t Type)
-  		{
-  			
-	  		static boost::shared_ptr<Mineserver::Game_Object_BlockType_Base> m_curType;
-  			switch (Type) {
-  				case 0x07:
-  					return boost::shared_ptr< Game_Object_BlockType_Base >((Game_Object_BlockType_Base*)(new Game_Object_BlockType<0x07>)); //Bedrock
-  				default:
-		  			if (m_curType)
-		  				return m_curType;
-		  			else
-		  				return boost::shared_ptr< Game_Object_BlockType_Base >(new Game_Object_BlockType_Base());
-	  		}
-  		}
+			switch (Type) {
+				case 0x07:
+					m_curTypes[Type] = boost::shared_ptr< Game_Object_BlockType_Base >(new Game_Object_BlockType<0x07>()); //Bedrock
+				default:
+					m_curTypes[Type] = boost::shared_ptr< Game_Object_BlockType_Base >(new Game_Object_BlockType_Default());
+			}
+	
+			return m_curTypes[Type];
+		}
+	}
 }
 
 #endif
