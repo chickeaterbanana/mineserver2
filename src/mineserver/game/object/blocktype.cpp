@@ -31,3 +31,22 @@ bool Mineserver::BlockType::Game_Object_BlockType_Default::isBreakable()
 {
 	return true;
 }
+
+boost::shared_ptr<Mineserver::BlockType::Game_Object_BlockType_Base> Mineserver::BlockType::GetBlockType(const Mineserver::BlockType::blocktype_t Type)
+{
+	static std::map<Mineserver::BlockType::blocktype_t, boost::shared_ptr<Mineserver::BlockType::Game_Object_BlockType_Base> > m_curTypes;
+	if (m_curTypes.count(Type) > 0)
+	{
+		if (m_curTypes[Type])
+			return m_curTypes[Type];
+	}
+
+	switch (Type) {
+		case 0x07:
+			m_curTypes[Type] = boost::shared_ptr< Mineserver::BlockType::Game_Object_BlockType_Base >(new Mineserver::BlockType::Game_Object_BlockType<0x07>()); //Bedrock
+		default:
+			m_curTypes[Type] = boost::shared_ptr< Mineserver::BlockType::Game_Object_BlockType_Base >(new Mineserver::BlockType::Game_Object_BlockType_Default());
+	}
+
+	return m_curTypes[Type];
+}

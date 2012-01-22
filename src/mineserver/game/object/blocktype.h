@@ -37,14 +37,12 @@
 #include <mineserver/game/player.h>
 #include <mineserver/game/object/block.h>
 
-#include <mineserver/game/object/Blocks/unspecial.h>
-#include <mineserver/game/object/Blocks/bedrock.h>
-
 namespace Mineserver
 {
 
 	namespace BlockType
-	{
+	{		
+	
 		typedef uint8_t blocktype_t;
 		
 		//the base of all BlockTypes is pure virtual a Blocktype have to have this functions
@@ -75,25 +73,11 @@ namespace Mineserver
 				virtual bool isBreakable();
 		};
   
-		boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType(const blocktype_t Type)
-		{
-			static std::map<blocktype_t, boost::shared_ptr<Game_Object_BlockType_Base> > m_curTypes;
-			if (m_curTypes.count(Type) > 0)
-			{
-				if (m_curTypes[Type])
-					return m_curTypes[Type];
-			}
-	
-			switch (Type) {
-				case 0x07:
-					m_curTypes[Type] = boost::shared_ptr< Game_Object_BlockType_Base >(new Game_Object_BlockType<0x07>()); //Bedrock
-				default:
-					m_curTypes[Type] = boost::shared_ptr< Game_Object_BlockType_Base >(new Game_Object_BlockType_Default());
-			}
-	
-			return m_curTypes[Type];
-		}
+		boost::shared_ptr<Game_Object_BlockType_Base> GetBlockType(const blocktype_t Type);
 	}
 }
+
+#include <mineserver/game/object/Blocks/unspecial.h>
+#include <mineserver/game/object/Blocks/bedrock.h>
 
 #endif

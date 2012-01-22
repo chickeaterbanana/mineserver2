@@ -33,15 +33,15 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-#include<mineserver/world.h>
-#include<mineserver/game/player.h>
-#include<mineserver/game/object/blocktype.h>
+#include <mineserver/world.h>
+#include <mineserver/game/player.h>
+#include <mineserver/game/object/blocktype.h>
 
 namespace Mineserver
 {
 	namespace BlockType
 	{
-		
+			
 		//the unspecial default Blocktype
 		template <Mineserver::BlockType::blocktype_t blockType>		
 		class Game_Object_BlockType : public Game_Object_BlockType_Default
