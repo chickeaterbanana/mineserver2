@@ -66,6 +66,7 @@ namespace Mineserver
     uint32_t z;
 		
 		World_Chunk(const uint8_t WorldHeight = 128);
+		virtual ~World_Chunk();
     // TODO:
     // This should use the worldHeight property instead of using 128 verbatim.
     uint8_t *m_blockType;

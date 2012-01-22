@@ -34,3 +34,12 @@ Mineserver::World_Chunk::World_Chunk(const uint8_t WorldHeight)
   m_lightSky = new uint8_t[16*16*WorldHeight];
   m_lightBlock = new uint8_t[16*16*WorldHeight];
 }
+
+Mineserver::World_Chunk::~World_Chunk()
+{
+	delete m_blockType;
+  delete m_blockMeta;
+  delete m_lightSky;
+  delete m_lightBlock;
+}
+
